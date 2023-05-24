@@ -1,0 +1,11 @@
+{
+  "name": "anime-news-api",
+  "version": "1.0.0",
+  "description": "Returns news from various sources about the anime industry or specific anime",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Kyle Shervington",
+  "license": "ISC"
+}
