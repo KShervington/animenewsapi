@@ -19,6 +19,11 @@ const newsSources = [
         name: 'red',
         address: 'https://www.reddit.com/r/anime/new/?f=flair_name%3A%22News%22',
         base: 'https://www.reddit.com'
+    },
+    {
+        name: 'ann',
+        address: 'https://www.animenewsnetwork.com/news/',
+        base: 'https://www.animenewsnetwork.com/'
     }
 ]
 
@@ -46,7 +51,8 @@ newsSources.forEach(source => {
                     break;
                 case "ann":
                     // TODO:
-                    // Anime News Network
+                    // Same prob as reddit; 'anime' and 'manga' badges are a tags
+                    articleTitles = '.mainfeed-section .wrap h3 > a';
                     break;
                 default:
                     console.log("No unique title selection for:\n" + source.name + "(url) " + source.address);
@@ -90,19 +96,7 @@ app.get('/news/:sourceId', (req, res) => {
             const singleArticles = [];
             var articleTitles;
 
-            switch (sourceId) {
-                case "cr":
-                    articleTitles = '.news-item > h2 > a';
-                    break;
-                case "mal":
-                    articleTitles = '.news-list .news-unit p.title > a';
-                    break;
-                case "red":
-                    articleTitles = 'a.SQnoC3ObvgnGjWt90zD9Z';
-                    break;
-                default:
-                    console.log("No unique title selection for:\n" + newspaper.name + "(url) " + newspaper.address);
-            }
+            articleTitles = ChooseTitles(sourceId);
 
             $(articleTitles, html).each(function () {
                 const title = $(this).text();
@@ -119,5 +113,29 @@ app.get('/news/:sourceId', (req, res) => {
 
         }).catch((err) => console.log(err));
 })
+
+function ChooseTitles(source) {
+
+    switch (source) {
+        case "cr":
+            return '.news-left .news h2 > a';
+            break;
+        case "mal":
+            return '.news-list .news-unit p.title > a';
+            break;
+        case "red":
+            // TODO:
+            // Find a way to to get more posts included in response 
+            return 'a.SQnoC3ObvgnGjWt90zD9Z';
+            break;
+        case "ann":
+            return '.mainfeed-section .wrap h3 > a';
+            break;
+        default:
+            ChooseTitles = 'INVALID';
+            console.log("No unique title selection for this source in ChooseTitles():\n" + source);
+    }
+
+}
 
 app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));
