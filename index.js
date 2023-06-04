@@ -37,26 +37,8 @@ newsSources.forEach(source => {
             const $ = cheerio.load(html);
             var articleTitles;
 
-            switch (source.name) {
-                case "cr":
-                    articleTitles = '.news-left .news h2 > a';
-                    break;
-                case "mal":
-                    articleTitles = '.news-list .news-unit p.title > a';
-                    break;
-                case "red":
-                    // TODO:
-                    // Find a way to to get more posts included in response 
-                    articleTitles = 'a.SQnoC3ObvgnGjWt90zD9Z';
-                    break;
-                case "ann":
-                    // TODO:
-                    // Same prob as reddit; 'anime' and 'manga' badges are a tags
-                    articleTitles = '.mainfeed-section .wrap h3 > a';
-                    break;
-                default:
-                    console.log("No unique title selection for:\n" + source.name + "(url) " + source.address);
-            }
+            // Select titles based on news source
+            articleTitles = ChooseTitles(source.name);
 
             $(articleTitles, html).each(function () {
                 const title = $(this).text();
@@ -119,21 +101,22 @@ function ChooseTitles(source) {
     switch (source) {
         case "cr":
             return '.news-left .news h2 > a';
-            break;
+
         case "mal":
             return '.news-list .news-unit p.title > a';
-            break;
+
         case "red":
             // TODO:
             // Find a way to to get more posts included in response 
             return 'a.SQnoC3ObvgnGjWt90zD9Z';
-            break;
+
         case "ann":
             return '.mainfeed-section .wrap h3 > a';
-            break;
+
         default:
-            ChooseTitles = 'INVALID';
             console.log("No unique title selection for this source in ChooseTitles():\n" + source);
+            return 'INVALID';
+
     }
 
 }
